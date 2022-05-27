@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/sergeykotenkogithub/nodeGb/issues"
   },
-  "homepage": "https://github.com/sergeykotenkogithub/nodeGb#readme"
+  "homepage": "https://github.com/sergeykotenkogithub/nodeGb#readme",
+  "dependencies": {
+    "colors": "^1.4.0"
+  }
 }
