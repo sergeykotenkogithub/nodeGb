@@ -1,6 +1,7 @@
 const fs = require("fs");
 const { Transform } = require("stream");
 
+const srcFile = "./access.log";
 const ipNew = ["89.123.1.41", "34.48.240.111"];
 
 const newFile = (ip) => {
