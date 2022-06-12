@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Почему стили не подключаются -->
+    <link rel="stylesheet" href="./index.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.min.js"
+    integrity="sha512-2hIBfT6wur46uR5ayhmyICuA8s15BvJhagB+jZImgktQAy832P7EuY8njl1HGp4YS0Sk8DXRo9dByhvD3jfDxA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+
+    <style>
+        .join {
+            color: green;
+        }
+        .notJoin {
+            color: red;
+        }
+    </style>
+
+    <input id="input" type="text" autofocus>
+    <button id="button">Send</button>
+    <div id="message"></div>
+
+    <script>
+        let nickName = '';
+        let connect = null;
+        const socket = io('localhost:8085');
+        const messageBlock = document.querySelector('#message');
+        const button = document.querySelector('#button');
+        const input = document.querySelector('#input');
+
+        document.querySelector('input').addEventListener('keydown', function(e) {
+            if (e.keyCode === 13) {
+                const data = {
+                    message: input.value,
+                }
+                socket.emit('newMessage', data);
+            }
+        });
+
+        button.addEventListener('click', () => {
+            const data = {
+                message: input.value,
+            }
+            socket.emit('newMessage', data);
+        });
+
+        socket.on('connect', (data) => {
+            console.log('Connected to chat!');
+        })
+        socket.on('join', ({name}) => {
+            messageBlock.insertAdjacentHTML(
+                'beforeend',
+                `
+                    <div class="join">${name}</div>
+                `
+            );
+        });
+        socket.on('notJoin', ({name}) => {
+            messageBlock.insertAdjacentHTML(
+                'beforeend',
+                `
+                    <div class="notJoin">${name}</div>
+                `
+            );
+        });
+        socket.on('nick', ({name}) => {
+            nickName = name
+        });
+        socket.on('newMessage', (data) => {
+            input.value = '';
+            messageBlock.insertAdjacentHTML(
+                'beforeend',
+                `
+                    <div>${nickName} : ${data.message}</div>
+                `
+            );
+        });
+    </script>
+
+    <!-- Почему не работает если выношу в отдельный файл ? -->
+    <!-- <script src="./index.js"></script> -->
+
+</body>
+</html>
